@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Anggota;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AnggotaController extends Controller
 {
@@ -12,7 +13,8 @@ class AnggotaController extends Controller
      */
     public function index()
     {
-        //
+        $anggota = Anggota::with('user')->get();
+        return inertia::render("Anggota", compact("anggota"));
     }
 
     /**
@@ -28,7 +30,14 @@ class AnggotaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "nama"=> "required",
+            "alamat"=> "required",
+            "no_hp"=> "required",
+        ]);
+
+        Anggota::create($request->all());
+        return redirect()->route("anggota.index")->with("success","");
     }
 
     /**

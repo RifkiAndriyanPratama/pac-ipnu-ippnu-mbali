@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Anggota;
 
 class RegisteredUserController extends Controller
 {
@@ -34,12 +35,24 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'alamat' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:15',
+            'tanggal_lahir' => 'required|date',
+            'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+        ]);
+
+        $anggota = Anggota::create([
+            'user_id'=> $user->id,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'foto' => $request->file('foto')->store('foto-anggota', 'public')
         ]);
 
         event(new Registered($user));

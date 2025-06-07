@@ -1,21 +1,26 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    alamat: "",
+    no_hp: "",
+    tanggal_lahir: "",
+    foto: null,
 });
 
 const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+    form.post(route("register"), {
+        forceFormData: true,
+        onFinish: () => form.reset("password", "password_confirmation", "foto"),
     });
 };
 </script>
@@ -26,7 +31,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="Nama" />
 
                 <TextInput
                     id="name"
@@ -39,6 +44,54 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="foto" value="Foto" />
+                <input
+                    id="foto"
+                    type="file"
+                    class="mt-1 block w-full border border-gray-300 rounded-md"
+                    @change="(e) => (form.foto = e.target.files[0])"
+                    accept="image/*"
+                />
+                <InputError class="mt-2" :message="form.errors.foto" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="alamat" value="Alamat" />
+                <TextInput
+                    id="alamat"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.alamat"
+                    required
+                />
+                <InputError class="mt-2" :message="form.errors.alamat" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="no_hp" value="No HP" />
+                <TextInput
+                    id="no_hp"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.no_hp"
+                    required
+                />
+                <InputError class="mt-2" :message="form.errors.no_hp" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="tanggal_lahir" value="Tanggal Lahir" />
+                <TextInput
+                    id="tanggal_lahir"
+                    type="date"
+                    class="mt-1 block w-full"
+                    v-model="form.tanggal_lahir"
+                    required
+                />
+                <InputError class="mt-2" :message="form.errors.tanggal_lahir" />
             </div>
 
             <div class="mt-4">
